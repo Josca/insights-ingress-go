@@ -143,3 +143,21 @@ This decodes to:
 Use `go test` to test the application
 
     $> go test ./...
+
+## For yupana (using docker-compose)
+1. Start ingress service:
+~~~bash
+cd development
+docker-compose up --build
+~~~
+
+2. Using web UI (`http://localhost:9000`) create bucket `insights-upload-perma`.
+
+3. Upload sample archive from yupana project.
+~~~bash
+cd yupana # go to your yupana local copy
+curl -vF "file=@sample.tar.gz;type=application/vnd.redhat.advisor.somefile+tgz" \
+     -H "x-rh-identity: eyJpZGVudGl0eSI6IHsiYWNjb3VudF9udW1iZXIiOiAiMDAwMDAwMSIsICJpbnRlcm5hbCI6IHsib3JnX2lkIjogIjAwMDAwMSJ9fX0=" \
+     -H "x-rh-request_id: testtesttest" http://localhost:8080/api/ingress/v1/upload
+~~~
+You should get `202 Accepted` response and you should see the bucket updated using web UI.

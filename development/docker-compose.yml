@@ -31,20 +31,26 @@ services:
     ports:
       - 9000:9000
     environment:
-      - MINIO_ACCESS_KEY=$MINIO_ACCESS_KEY
-      - MINIO_SECRET_KEY=$MINIO_SECRET_KEY
+      - MINIO_ACCESS_KEY=BQA2GEXO711FVBVXDWKM
+      - MINIO_SECRET_KEY=uvgz3LCwWM3e400cDkQIH/y1Y4xgU4iV91CwFSPC
   ingress:
-    image: quay.io/cloudservices/insights-ingress:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
     ports:
       - 8080:3000
     environment:
       - INGRESS_STAGEBUCKET=insights-upload-perma
         # VALIDTOPICS is required. This is derived from content type. ex: vnd.redhat.advisor.thing+tgz
-      - INGRESS_VALIDTOPICS=testareno,advisor
+      - INGRESS_VALIDTOPICS=testareno,advisor,qpc
       - OPENSHIFT_BUILD_COMMIT=somestring
       - INGRESS_MINIODEV=true
-      - INGRESS_MINIOACCESSKEY=$MINIO_ACCESS_KEY
-      - INGRESS_MINIOSECRETKEY=$MINIO_SECRET_KEY
+      - INGRESS_MINIOACCESSKEY=BQA2GEXO711FVBVXDWKM
+      - INGRESS_MINIOSECRETKEY=uvgz3LCwWM3e400cDkQIH/y1Y4xgU4iV91CwFSPC
       - INGRESS_MINIOENDPOINT=minio:9000
     depends_on:
        - kafka
+
+volumes:
+  minio_conf:
+  minio_data:
